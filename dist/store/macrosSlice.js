@@ -21,7 +21,7 @@ export const macrosSlice = createSlice({
 });
 export const {loadMacrosSuccess, saveMacrosSuccess, setMacrosNotSupported} = macrosSlice.actions;
 export default macrosSlice.reducer;
-export const loadMacros = (connectedDevice) => async (dispatch) => {
+export const loadMacros = (connectedDevice, basicKeyToByte) => async (dispatch) => {
   const {api, protocol} = connectedDevice;
   if (protocol < 8) {
     dispatch(setMacrosNotSupported());

@@ -1,4 +1,4 @@
-import basicKeyToByte from "../key-to-byte.json.proxy.js";
+import basicKeyToByte from "../key-to-byte/default.json.proxy.js";
 export var KeyAction;
 (function(KeyAction2) {
   KeyAction2[KeyAction2["Tap"] = 1] = "Tap";

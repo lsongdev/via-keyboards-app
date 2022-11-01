@@ -8,7 +8,10 @@ import {getByteForCode, getCodeForByte} from "../../../utils/key.js";
 import {title, component} from "../../icons/save.js";
 import {CenterPane} from "../pane.js";
 import {Detail, Label, OverflowCell, ControlRow} from "../grid.js";
-import {getSelectedDefinition} from "../../../store/definitionsSlice.js";
+import {
+  getBasicKeyToByte,
+  getSelectedDefinition
+} from "../../../store/definitionsSlice.js";
 import {
   getSelectedRawLayers,
   saveRawKeymapToDevice
@@ -34,6 +37,7 @@ export const Pane = () => {
   const selectedDevice = useAppSelector(getSelectedConnectedDevice);
   const rawLayers = useAppSelector(getSelectedRawLayers);
   const macros = useAppSelector((state) => state.macros);
+  const {basicKeyToByte, byteToKey} = useAppSelector(getBasicKeyToByte);
   if (!selectedDefinition || !selectedDevice) {
     return null;
   }
@@ -45,7 +49,7 @@ export const Pane = () => {
       name,
       vendorProductId,
       macros: [...macros.expressions],
-      layers: rawLayers.map((layer) => layer.keymap.map((keyByte) => getCodeForByte(keyByte) || ""))
+      layers: rawLayers.map((layer) => layer.keymap.map((keyByte) => getCodeForByte(keyByte, basicKeyToByte, byteToKey) || ""))
     };
     const content = stringify(saveFile);
     const defaultFilename = name.replace(/[^a-zA-Z0-9]/g, "_").toLowerCase();
@@ -84,7 +88,7 @@ export const Pane = () => {
         }
         dispatch(saveMacros(selectedDevice, saveFile.macros));
       }
-      const keymap = saveFile.layers.map((layer) => layer.map((key) => getByteForCode(`${key}`)));
+      const keymap = saveFile.layers.map((layer) => layer.map((key) => getByteForCode(`${key}`, basicKeyToByte)));
       await dispatch(saveRawKeymapToDevice(keymap, selectedDevice));
       setSuccessMessage("Successfully updated layout!");
     };

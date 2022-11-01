@@ -38,6 +38,9 @@ export const Pane = () => {
     onClick: (_) => setSelectedMacro(idx),
     key: idx
   }, `Macro ${idx}`)), [selectedMacro]);
+  if (!selectedDevice) {
+    return null;
+  }
   return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(SubmenuOverflowCell, null, /* @__PURE__ */ React.createElement(MenuContainer, null, macroMenus)), /* @__PURE__ */ React.createElement(OverflowCell, null, /* @__PURE__ */ React.createElement(MacroPane, null, /* @__PURE__ */ React.createElement(Container, null, /* @__PURE__ */ React.createElement(MacroDetailPane, {
     macroExpressions,
     selectedMacro,

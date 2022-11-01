@@ -1,4 +1,3 @@
-import {byteToKey} from "../key.js";
 import {isAutocompleteKeycode} from "../autocomplete-keycodes.js";
 import {
   DelayTerminator,
@@ -53,8 +52,9 @@ export function validateMacroExpressionV11(expression) {
   };
 }
 export class MacroAPIV11 {
-  constructor(keyboardApi) {
+  constructor(keyboardApi, byteToKey) {
     this.keyboardApi = keyboardApi;
+    this.byteToKey = byteToKey;
   }
   async readMacroExpressions() {
     const bytes = await this.keyboardApi.getMacroBytes();
@@ -80,11 +80,11 @@ export class MacroAPIV11 {
           switch (byte) {
             case KeyAction.Tap:
               byte = bytes[++i];
-              currentExpression.push(`{${byteToKey[byte]}}`);
+              currentExpression.push(`{${this.byteToKey[byte]}}`);
               break;
             case KeyAction.Down:
               byte = bytes[++i];
-              currentChord.push(byteToKey[byte]);
+              currentChord.push(this.byteToKey[byte]);
               break;
             case KeyAction.Up:
               while (bytes[i + 2] === KeyActionPrefix && bytes[i + 3] === KeyAction.Up && i < bytes.length) {

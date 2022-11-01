@@ -30,6 +30,7 @@ import {
   updateSelectedKey as updateSelectedKeyAction
 } from "../store/keymapSlice.js";
 import {
+  getBasicKeyToByte,
   getSelectedDefinition,
   getSelectedKeyDefinitions
 } from "../store/definitionsSlice.js";
@@ -50,6 +51,7 @@ export const Home = (props) => {
   const selectedLayerIndex = useAppSelector(getSelectedLayerIndex);
   const selectedKeyDefinitions = useAppSelector(getSelectedKeyDefinitions);
   const disableFastRemap = useAppSelector(getDisableFastRemap);
+  const {basicKeyToByte} = useAppSelector(getBasicKeyToByte);
   const updateDevicesRepeat = timeoutRepeater(() => {
     dispatch(reloadConnectedDevices());
   }, 500, 1);
@@ -63,7 +65,7 @@ export const Home = (props) => {
     if (allowKeyRemappingViaKeyboard && globalHotKeysAllowed && selectedKey !== null) {
       const keycode = mapEvtToKeycode(evt);
       if (keycode) {
-        updateSelectedKey(getByteForCode(keycode));
+        updateSelectedKey(getByteForCode(keycode, basicKeyToByte));
       }
     }
   };
@@ -99,7 +101,7 @@ export const Home = (props) => {
       await api.setRGBMode(val);
     }
   };
-  const [selectedTitle, setSelectedTitle] = useState(null);
+  const [, setSelectedTitle] = useState(null);
   const homeElem = createRef();
   useEffect(() => {
     if (!hasHIDSupport) {
